@@ -52,7 +52,7 @@ Small auditable summary tables are in [`reports/tables/`](reports/tables/); a co
 ## Getting started (source and environment)
 
 ```powershell
-git clone --recurse-submodules <REPOSITORY-URL>
+git clone --recurse-submodules https://github.com/vs-dx/pie-sae.git
 cd pie-sae
 ```
 
