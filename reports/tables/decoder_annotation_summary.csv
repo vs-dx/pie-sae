@@ -1,0 +1,5 @@
+layer,features,annotated_features,significant_associations,GO_BP,KEGG,Reactome,TRRUST_TF
+decoder.0,3072,1694,18976,6744,2938,9261,33
+decoder.1,3072,1616,18144,6287,2717,9106,34
+decoder.2,3072,1603,18321,6397,2768,9127,29
+decoder.3,3072,1612,18323,6316,2808,9165,34

@@ -1,0 +1,46 @@
+# Python environments and local configuration
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.env
+.env.*
+.vscode/
+
+# Large/local artifacts: never commit original data or model weights
+/data/
+/models/
+/checkpoints/
+/cache/
+/runs/
+/results/
+/artifacts/
+/audit/
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npy
+*.npz
+
+# Local exports, temporary backups and audit utilities
+*.zip
+*.7z
+*.tar
+*.log
+/notebooks/*_archive.ipynb
+/notebooks/*_pre_audit.ipynb
+/notebooks/*_audited.ipynb
+/notebooks/*_clean.ipynb
+/notebooks/*_development.ipynb
+/collect_pie_sae_audit_metadata.py
+/verify_pie_sae_integrity.py
+
+# OS metadata
+.DS_Store
+Thumbs.db

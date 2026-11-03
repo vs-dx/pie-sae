@@ -1,0 +1,15 @@
+layer,init_seed,val_mse,val_r2,explained_variance,l0,inactive_features,optimizer_steps,checkpoint
+encoder.0,1000,0.019900657731171393,0.98208572031066,0.9822994890920129,32.0,0,5120,runs\sae_protocol_tests\encoder_0_init1000_order42_ep20_bs256_lr3e-04\sae_final.pt
+encoder.1,1001,0.10351707115836173,0.9229006888243918,0.9248004550551499,32.0,0,5120,runs\sae_protocol_tests\encoder_1_init1001_order42_ep20_bs256_lr3e-04\sae_final.pt
+encoder.2,1002,0.18399067888394116,0.882000349401531,0.8849175795178186,32.0,0,5120,runs\sae_protocol_tests\encoder_2_init1002_order42_ep20_bs256_lr3e-04\sae_final.pt
+encoder.3,1003,0.28479958874654027,0.847276373834714,0.8512702421056345,32.0,0,5120,runs\sae_protocol_tests\encoder_3_init1003_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.0,1004,0.31401323775624174,0.843996291414693,0.8483063965761568,32.0,0,5120,runs\sae_protocol_tests\processor_0_init1004_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.1,1005,0.35878671468494167,0.8340392679938875,0.8381268605591139,32.0,0,5120,runs\sae_protocol_tests\processor_1_init1005_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.2,1006,0.4028300604312231,0.8256279925575576,0.830215056332672,32.0,0,5120,runs\sae_protocol_tests\processor_2_init1006_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.3,1007,0.44069623219573484,0.8223560111494442,0.8270361936043547,32.0,0,5120,runs\sae_protocol_tests\processor_3_init1007_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.4,1008,0.49072937795793486,0.8161166568655313,0.8213716117401193,32.0,0,5120,runs\sae_protocol_tests\processor_4_init1008_order42_ep20_bs256_lr3e-04\sae_final.pt
+processor.5,1009,0.5319281928712397,0.8119416074333146,0.8170457462514882,32.0,0,5120,runs\sae_protocol_tests\processor_5_init1009_order42_ep20_bs256_lr3e-04\sae_final.pt
+decoder.0,1010,0.09186231057715795,0.8902913328809103,0.891376100956705,32.0,0,66420,runs\sae_protocol_tests\decoder_0_init1010_order42_ep20_bs256_lr3e-04\sae_final.pt
+decoder.1,1011,0.12688561331087506,0.8596820121488423,0.8631271637492863,32.0,0,66420,runs\sae_protocol_tests\decoder_1_init1011_order42_ep20_bs256_lr3e-04\sae_final.pt
+decoder.2,1012,0.16380033389555412,0.8352188830046663,0.8392219086984541,32.0,0,66420,runs\sae_protocol_tests\decoder_2_init1012_order42_ep20_bs256_lr3e-04\sae_final.pt
+decoder.3,1013,0.19481919914888055,0.8275062086742477,0.8314015989886343,32.0,0,66420,runs\sae_protocol_tests\decoder_3_init1013_order42_ep20_bs256_lr3e-04\sae_final.pt

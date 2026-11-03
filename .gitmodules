@@ -1,0 +1,6 @@
+[submodule "external/pie"]
+	path = external/pie
+	url = https://github.com/ArcInstitute/pie
+[submodule "external/bio-sae"]
+	path = external/bio-sae
+	url = https://github.com/Biodyn-AI/bio-sae
