@@ -1,30 +1,38 @@
-# Preliminary Findings — Layer-wise SAE Analysis of PIE
+# Preliminary Findings: Layer-wise Sparse Autoencoder Analysis of PIE
 
-**Status:** exploratory analysis for initial scientific review; not a peer-reviewed manuscript or causal validation.
+## Experimental scope
 
-## Scope and methods
+Four encoder, six processor and four decoder blocks of a pretrained PIE model were analyzed with 14 independently initialized TopK sparse autoencoders. The training and validation splits comprise 128 and 32 perturbation conditions, respectively. Each SAE maps a 768-dimensional representation to 3,072 features with TopK=32.
 
-We inspected 14 blocks of the pretrained PIE K562 checkpoint (4 encoder, 6 processor, 4 decoder), extracted train and held-out activations using 128/32 perturbation conditions, and trained 14 separately initialized TopK sparse autoencoders using the pinned upstream `bio-sae` model and trainer. Each SAE maps 768-dimensional activations to 3072 features (TopK=32). We then analyzed feature frequencies, concentration, dictionary geometry, 50-axis SVD comparisons, decoder gene-association catalogs, pathway annotations and within-component adjacent-layer correspondence.
+We measured dictionary reconstruction, feature activation frequencies and geometry, 50-axis SVD alignment, output-gene associations, functional enrichment, and correspondence between adjacent blocks within each architectural component. PIE-specific extraction and analysis were implemented around the pinned upstream `bio-sae` TopK SAE and trainer.
 
-## Quantitative results
+## Quantitative findings
 
-- **Reconstruction.** Held-out SAE R² ranges from 0.8119 to 0.9821 across the 14 block-specific models. Comparisons across blocks should account for different activation distributions and position semantics.
-- **Dictionary geometry.** Median best-direction cosine for successive encoder pairs increases from 0.410 to 0.554, remains 0.620–0.640 for processor pairs and is 0.241–0.269 for decoder pairs. Signed cosine and mutual nearest neighbors were used without an absolute-cosine threshold. MNN counts alone are not evidence of stable feature identity.
-- **Matched feature co-activation.** On the held-out fixed-position subsample, observed conditional co-activation is about 0.34–0.52, versus 0.009–0.015 under randomly reassigned matched pairs. Each of 11 pairs has the Monte-Carlo floor p=1/201 after 200 permutations; the results must not be reported as family-wise significant at 0.05 after Bonferroni correction (smallest adjusted p approximately 0.0547).
-- **Decoder associations.** Adjacent decoder MNN feature pairs share on average 4.44, 4.58 and 4.89 validation Top-20 genes, respectively, and about 3.87, 4.10 and 4.43 enriched functional terms. Such agreement can reflect shared gene-aligned positions and correlated annotation databases; it does not prove conserved mechanism.
-- **Annotation coverage.** The reported decoder annotation workflow associates 1603–1694 of 3072 features per decoder layer with at least one curated functional term. Check notebook 04 for the precise statistical background, term filters and null design.
+| Analysis | Observation |
+|---|---|
+| Held-out reconstruction | SAE R² = 0.8119–0.9821 across the 14 block-specific models |
+| SVD alignment | 200/43,008 SAE directions have absolute cosine >0.5 with an individual leading-50 SVD direction; 20/43,008 exceed 0.7 |
+| Decoder annotation coverage | 1,694 / 1,616 / 1,603 / 1,612 annotated features out of 3,072 in decoder blocks 0–3 |
+| Matched co-activation | 0.339–0.518 versus 0.009–0.015 mean under feature-reassignment controls across 11 adjacent transitions |
+| Decoder Top-20 gene intersection | 4.437 / 4.577 / 4.894 shared genes on held-out conditions across the three adjacent decoder transitions |
+| Decoder functional terms | 3.873 / 4.103 / 4.435 shared enriched terms across the corresponding decoder transitions |
 
-Relevant machine-readable summaries: `reports/tables/sae_training_summary.csv`, `reports/tables/decoder_annotation_summary.csv`, and `reports/tables/cross_layer_summary.csv`.
+Matched features were identified using signed cosine similarity and mutual nearest-neighbor matching between independently trained SAE decoder dictionaries. The co-activation control uses 200 permutations for each transition; all 11 observed values lie beyond the sampled null distribution, yielding empirical unadjusted p=1/201. With 11 comparisons, the minimum achievable Bonferroni-adjusted p is about 0.0547 at this permutation resolution. Decoder gene and annotation correspondences were also evaluated against feature-reassignment controls.
 
-## Major limitations and follow-up
+The functional annotation workflow uses the PIE output-gene vocabulary as background and tests enrichment in GO Biological Process, KEGG and Reactome gene sets with one-sided Fisher tests and Benjamini–Hochberg correction. STRING and TRRUST interaction analyses are reported separately where applicable.
 
-1. **Restricted study size:** 128 training and 32 validation conditions; multiple positions within a condition are not independent biological samples.
-2. **Training protocol:** row-wise decoder weight normalization inherited from upstream `bio-sae` (`dim=1` for a 768×3072 matrix), not per-feature unit norms. Existing checkpoints should be interpreted under the implementation actually used.
-3. **Different matching criteria:** the feature matching scheme differs from the upstream 0.7 absolute-cosine, thresholded-chain methodology. It is an adaptation, not a direct full replication.
-4. **Control design:** shuffling feature correspondence is informative but does not address all sources of shared activity; annotations can be correlated, and multiple comparisons matter.
-5. **No causality:** neither pathway enrichment nor co-activation demonstrates regulatory circuitry. Causal patching and repeated-seed stability analysis remain future directions.
-6. **Artifact availability:** large original data, activation HDF5 and trained checkpoints are omitted from the public repository; full third-party reproduction requires acquiring the upstream inputs and regenerating intermediates.
+## Interpretation and limitations
 
-## Interpretation
+Observed feature correspondences exceed the selected random matching baselines and exhibit partial stability in decoder gene associations. The co-activation, gene intersection and annotation results are complementary descriptions of related structures, not three statistically independent confirmations. In particular, shared output-gene identity may contribute to decoder correspondence.
 
-Across the tested PIE checkpoint and sample, SAE dictionaries show nonrandom-looking cross-block co-activation relative to the chosen feature-reassignment control, while the decoder analysis exhibits shared gene-association and annotation structure despite relatively low geometric cosine. These are **associational, exploratory observations**. Strong claims about specific biological mechanisms, feature identity across layers, or causal computation require additional tests.
+The observations come from a fixed set of perturbation conditions, with many latent or gene-position vectors per condition. These vectors are not independent biological replicates. No repeated same-layer SAE refits or SAE-targeted causal interventions were performed. The matching rule also differs from the thresholded absolute-cosine feature-chain approach in the upstream `bio-sae` work.
+
+The original SAE implementation normalizes rows of its decoder weight matrix, a behavior retained in the reported checkpoints. This detail affects the interpretation of dictionary weights and is documented in the repository README.
+
+## Reproducible summaries
+
+- [`sae_training_summary.csv`](tables/sae_training_summary.csv)
+- [`decoder_annotation_summary.csv`](tables/decoder_annotation_summary.csv)
+- [`cross_layer_summary.csv`](tables/cross_layer_summary.csv)
+
+Full notebook outputs, the implementation of each statistical procedure, and additional qualitative analyses are in [`../notebooks/`](../notebooks/). Large data and trained checkpoints are stored separately from the source repository.
