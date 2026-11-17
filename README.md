@@ -1,96 +1,153 @@
-# PIE-SAE: Layer-wise Sparse Autoencoder Analysis of PIE
+# PIE-SAE: Sparse Autoencoder Analysis of PIE Representations
 
-This project studies the internal representations of the pretrained **PIE (Perturbation Is Everything)** model with sparse autoencoders (SAEs). We train a separate TopK SAE for each of PIE's 14 encoder, processor, and decoder blocks, characterize the resulting feature dictionaries, and examine their biological annotations and correspondence across adjacent blocks.
+This repository investigates the internal representations of the pretrained **PIE (Perturbation Is Everything)** model using layer-wise **sparse autoencoders (SAEs)**, statistical controls, and targeted computational interventions.
 
-The experiments build on the upstream [PIE](https://github.com/ArcInstitute/pie) and [bio-sae](https://github.com/Biodyn-AI/bio-sae) implementations. Their source revisions are pinned as Git submodules; all PIE-specific extraction, analysis, and reporting are provided in this repository.
+Fourteen TopK SAEs are fitted to PIE's encoder, processor, and decoder blocks. The study measures reconstruction, feature activation and geometry, gene-associated functional annotations, cross-layer correspondence, statistical robustness, and the effects of modifying selected SAE directions during PIE inference.
+
+**Research status:** The planned exploratory analyses in notebooks 01–07 are complete. The findings describe properties of a fixed pretrained model and fixed SAE dictionaries. They **do not establish biological causality, unique feature-level mechanisms, or independent experimental replication**.
+
+The project uses pinned upstream implementations of [PIE (Arc Institute)](https://github.com/ArcInstitute/pie) and [bio-sae (Biodyn-AI)](https://github.com/Biodyn-AI/bio-sae), included as Git submodules. PIE-specific extraction, analysis, statistical checks, and interventions are implemented in this repository.
 
 ## Research questions
 
-- How accurately can sparse dictionaries reconstruct representations from different PIE blocks?
-- How do SAE feature frequencies and dictionary geometry vary across model depth?
-- Which output-gene associations and functional annotations occur in decoder SAE features?
-- To what extent do matched features on adjacent blocks exhibit geometric, activation, gene-association, and functional correspondence?
+1. How faithfully do layer-wise SAEs reconstruct PIE's internal representations?
+2. How do feature usage, dictionary geometry, and gene-associated annotations vary across blocks?
+3. Do geometrically matched features in adjacent blocks have related activations and gene associations?
+4. Which patterns survive bootstrap, permutation, gene-label, and random-direction controls?
+5. What changes in PIE's predictions and downstream representations when selected SAE components are ablated or patched?
 
 ## Experimental setup
 
 | Component | Configuration |
 |---|---|
-| Pretrained model | PIE, K562 held-out context checkpoint |
+| Pretrained model | PIE, K562 held-out-context checkpoint |
 | Representation blocks | 4 encoder, 6 processor, 4 decoder (14 total) |
-| SAE | Upstream `TopKSAE` / `SAETrainer` from `bio-sae` |
-| Input dimension / dictionary size | 768 / 3072 |
+| SAE implementation | Pinned upstream `TopKSAE` / `SAETrainer` from `bio-sae` |
+| Representation dimension | 768 |
+| Dictionary size | 3,072 features per block |
 | Sparsity | TopK = 32 |
-| Train / validation | 128 / 32 perturbation conditions |
-| Optimization | Adam; 20 epochs; batch size 256; learning rate 3e-4 |
-| Initialization | Layer-specific seeds 1000–1013; batch-order seed 42 |
+| Selected activation dataset | 128 training and 32 validation perturbation conditions |
+| SAE optimization | Adam; 20 epochs; batch size 256; learning rate 3e-4 |
+| SAE initialization | Layer-specific seeds 1000–1013; batch-order seed 42 |
 | Encoder / processor positions | 512 latent slots per condition |
-| Decoder positions | 6,642 output genes per condition |
+| Decoder positions | 6,642 output-gene positions per condition |
+| Feature analysis | Fixed pretrained PIE model and 14 fixed trained SAE checkpoints |
 
-The pretrained PIE model and the 14 trained SAEs remain fixed during feature analysis. The mean activation used for centering is estimated separately on each training split. Gene and latent positions within one perturbation condition are correlated observations, not independent experimental replicates.
+Means used to center SAE inputs are estimated from the relevant training activations. Observations at different gene or latent positions within a condition are **not independent biological replicates**. The 32-condition validation panel is a previously selected subset of a larger validation collection; follow-up analyses on that panel should be interpreted as exploratory rather than independent confirmatory tests.
 
 ## Notebook pipeline
 
-| Notebook | Analysis |
+The recommended reading order is 01 → 02 → 03 → 04 → 05 → 06a → 06b → 07.
+
+| Notebook | Main contents |
 |---|---|
-| [`01_pie_architecture.ipynb`](notebooks/01_pie_architecture.ipynb) | Model architecture, checkpoint loading, forward hooks, activation shapes |
-| [`02_extract_activations.ipynb`](notebooks/02_extract_activations.ipynb) | Train/validation activation extraction, HDF5 validation, gene map, provenance |
-| [`03_train_layerwise_sae.ipynb`](notebooks/03_train_layerwise_sae.ipynb) | TopK SAE training and checkpoint manifests for all 14 blocks |
-| [`04_sae_feature_analysis.ipynb`](notebooks/04_sae_feature_analysis.ipynb) | Feature statistics, SVD, decoder gene catalogs, ontology/network analyses |
-| [`05_cross_layer_analysis.ipynb`](notebooks/05_cross_layer_analysis.ipynb) | Dictionary correspondence, co-activation, gene/annotation overlap, null comparisons |
+| [01 — PIE architecture](notebooks/01_pie_architecture.ipynb) | Architecture, checkpoint restoration, forward hooks, activation shapes, identity checks |
+| [02 — Activation extraction](notebooks/02_extract_activations.ipynb) | Condition selection, HDF5 extraction, exact gene-axis checks, manifests and data validation |
+| [03 — Layer-wise SAE training](notebooks/03_train_layerwise_sae.ipynb) | Independent initialization, 14 TopK SAE fits, held-out reconstruction and checkpoint verification |
+| [04 — SAE feature analysis](notebooks/04_sae_feature_analysis.ipynb) | Feature usage, SVD comparisons, decoder gene catalogs, annotation and gene-label controls |
+| [05 — Cross-layer correspondence](notebooks/05_cross_layer_analysis.ipynb) | Mutual-nearest-neighbor dictionary matching, co-activation, gene/term overlap and null comparisons |
+| [06a — Statistical significance pilot](notebooks/06a_statistical_significance.ipynb) | Shared condition variation, random projections, selected-feature enrichment and two permutation nulls |
+| [06b — Statistical validation](notebooks/06b_full_statistical_validation.ipynb) | Provenance audit, context-stratified bootstrap, cross-split stability, full-dictionary enrichment, selected-panel maxT and cross-layer controls |
+| [07 — Computational interventions](notebooks/07_causal_validation.ipynb) | Identity checks, SAE-direction ablations, matched controls, activation patching, downstream responses and synthesis |
 
-Reusable analysis modules are under [`src/`](src/). A concise summary is available in [`reports/Preliminary_Findings.md`](reports/Preliminary_Findings.md) and machine-readable results in [`reports/tables/`](reports/tables/).
+Reusable Python modules are in [`src/`](src/). Published tabular summaries from the earlier pipeline are in [`reports/tables/`](reports/tables/). [`Preliminary_Findings.md`](reports/Preliminary_Findings.md) is an **earlier-stage summary of notebooks 01–05**, not a synthesis of the later statistical and intervention experiments. For the later results, consult notebooks 06a, 06b and 07 directly.
 
-## Results
+## Results: reconstruction, annotation and correspondence (01–05)
 
-**SAE reconstruction.** Held-out reconstruction R² spans **0.8119–0.9821** across the 14 fitted SAE dictionaries. TopK constrains the number of active features per representation to approximately 32; it is a design choice rather than an independent quality metric.
+**SAE reconstruction.** Held-out reconstruction R² ranges from **0.8119 to 0.9821** across the 14 SAE dictionaries ([training summary](reports/tables/sae_training_summary.csv)). TopK fixes approximately 32 active features per representation; this sparsity setting is not itself an independent quality metric.
 
-**Feature statistics and dictionary geometry.** Decoder feature catalogs contain 3,072 features per layer. Across all 14 dictionaries, 200 of 43,008 directions have absolute cosine similarity above 0.5 with an individual top-50 SVD direction (20 above 0.7). The axis-wise test does not measure agreement with the entire leading singular subspace.
+**Dictionary geometry.** Across 14 dictionaries, **200 of 43,008** feature directions have absolute cosine similarity above 0.5 with an individual top-50 SVD direction; **20** exceed 0.7. This is an axis-wise comparison, not a test of alignment with the complete leading singular subspace.
 
-**Decoder functional annotations.** Respectively **1,694, 1,616, 1,603 and 1,612** features in decoder blocks 0–3 have at least one reported significant annotation from the GO Biological Process / KEGG / Reactome / curated TF analysis. Enrichments use the 6,642 PIE output genes as background, one-sided Fisher tests, and Benjamini–Hochberg adjustment; see notebook 04 for the exact testing protocol.
+**Decoder annotations.** The historical analysis reports **1,694 / 1,616 / 1,603 / 1,612** annotated features (out of 3,072) in decoder blocks 0–3. The original enrichment workflow uses the 6,642 PIE output genes as its background and one-sided over-representation tests with Benjamini–Hochberg adjustment. These counts are retained as *historical reported results*, subject to the provenance discrepancy identified in notebook 06b.
 
-**Cross-layer correspondence.** Across 11 within-component adjacent transitions, conditional co-activation for geometrically matched SAE features is **0.339–0.518**, versus **0.009–0.015** under the feature-reassignment controls on a fixed validation subsample. The corresponding 200-permutation empirical p-values are 1/201 for each transition. This permutation count does not resolve family-wise significance at α=0.05 across all 11 comparisons (minimum possible Bonferroni-adjusted p≈0.0547).
+**Adjacent-block correspondence.** For the 11 within-component adjacent transitions, geometrically matched SAE features show sampled conditional co-activation of **0.339–0.518**, compared with **0.009–0.015** under fixed-pair feature-reassignment controls ([cross-layer summary](reports/tables/cross_layer_summary.csv)). Each of the 11 comparisons had an unadjusted empirical p-value of 1/201 from 200 permutations. That permutation resolution does not permit a Bonferroni-adjusted rejection at 0.05 across all eleven tests (minimum adjusted value approximately 0.0547). The null does not repeat the original geometric matching procedure.
 
-Matched decoder features share on average **4.437, 4.577 and 4.894** genes among their validation Top-20 lists for the three decoder transitions, and **3.873, 4.103 and 4.435** significant functional terms, respectively. Gene-list overlap and annotation overlap are statistically related because the latter is derived from the former.
+Across the three decoder transitions, matched features share on average **4.437 / 4.577 / 4.894** validation Top-20 genes and **3.873 / 4.103 / 4.435** significant functional terms. Gene-list and annotation overlap are dependent summaries of related information, not independent confirmations.
 
-## Installation and local data
+## Results: statistical analyses (06a–06b)
 
-Clone the project with pinned upstream source trees:
+### Selected-feature pilot (06a)
+
+For decoder.0 feature 0, the observed common-condition variation fraction was **55.476%** on a ten-gene panel; a within-context measure based on a different variance denominator was **68.854%**. Random linear projections of the underlying PIE representations also showed substantial shared variation, so these observations do not establish SAE-specific structure.
+
+Ten selected decoder.0 features were evaluated using **4,420** reconstructed GO Biological Process, KEGG, and Reactome terms. Under global gene-label and annotation-degree-stratified permutation controls with 1,000 permutations each, **seven of the ten** passed both fixed-panel maxT procedures. The panel and its controls are exploratory, not a full-dictionary selection-adjusted test.
+
+### Expanded statistical validation (06b)
+
+The follow-up analysis compared all **12,288 decoder SAE features** across training and validation catalogs; **12,285** had complete Top-20 gene-association catalogs in both splits. Individual features differed markedly in stability and firing support, notably feature 2120.
+
+A full-dictionary enrichment analysis evaluated **54,312,960 feature–term hypotheses** under the specified one-sided hypergeometric model and global Benjamini–Hochberg procedure. It reported **73,646 associations across 6,491 features** at q ≤ 0.05. These are results under the stated model; gene selection, dependent ontology terms, and assumptions required for formal FDR interpretation remain substantive limitations.
+
+A subsequently examined **98-feature exploratory panel** yielded **19 features** passing both fixed-panel global and degree-aware maxT controls. The panel was partly selected using earlier results: these counts do **not** establish selection-adjusted significance over the complete 12,288-feature decoder population.
+
+The expanded analysis also revisited feature-matching, co-activation, and gene-overlap results under distinct permutation controls. The controls test different null hypotheses and do not demonstrate causal coupling between features.
+
+**Unresolved annotation provenance:** The current reconstruction produces **4,420** ontology terms and **one additional curated TRRUST term**, whereas historical summaries report **4,422** terms. Notebook 06b also identifies **337 historical explicit overlap-based tests** that remain unexplained after accounting for the TRRUST term. The historical annotation outputs have not been silently replaced or described as exactly reproduced; details are in [06b](notebooks/06b_full_statistical_validation.ipynb).
+
+## Results: computational interventions (07)
+
+The intervention experiments kept PIE and the SAE dictionaries fixed, modifying hidden representations at decoder.0 during forward computation. The operator subtracts a decoded feature contribution from the original hidden state; it is **not an exact `do(z_j = 0)` intervention**, since a zero activation after SAE re-encoding was not enforced.
+
+**Identity and baseline controls.** The restored PIE checkpoint reproduced the saved decoder.0 baseline in the initial condition, and identity interventions reproduced the original model outputs.
+
+**Feature ablation.** Ablating decoder.0 feature **189** changed PIE outputs in all **32 selected validation conditions**. Mean absolute changes were about **1.21–1.36 times** the means for five fixed random, norm-matched directions across the three output heads. The feature exceeded the mean random-direction control in only **17–19 of 32 conditions**, depending on the output head; its advantage against other learned SAE directions was weaker. Effects are measured within each output head, whose numerical scales differ.
+
+Features **0, 189 and 2120** were compared. Feature 2120 had effects concentrated in a subset of conditions: **19/32** had nonzero effects, and its top three conditions contributed approximately **72%** of its total DE-logit effect. This heterogeneity prevents a uniform per-condition interpretation.
+
+**Activation patching.** Transferring feature-189 coefficients between selected donor and recipient conditions changed predictions but did not reliably move them toward donor predictions. Across nine directed pairs, donor distance improved in only **2–3 pairs** per output head. Alternative-direction, donor-specificity, and reverse-displacement controls did not support reliable donor-state transfer.
+
+**Cross-layer response.** Feature **189** in decoder.0 was previously matched geometrically to feature **413** in decoder.1 (signed cosine approximately **0.3023**). In **six selected conditions**, ablating feature 189 made feature 413 the largest decoder.1 SAE activation responder among **3,072 features**, measured on source-feature-active gene positions. The response exceeded sixteen fixed learned-direction controls; however, those controls were **not matched for alignment with feature 413**. Geometry, TopK competition, and post-selection remain plausible explanations. **Unique mediation through 189 → 413 has not been demonstrated.**
+
+The notebook reports **15/15 internal intervention consistency checks**; notebook 06b reports **19/19 internal statistical consistency checks**. These checks establish internal numerical consistency of the saved analyses, **not independent methodological or biological validation**.
+
+## Interpretation and limitations
+
+- **Association, computational intervention, and biological causation are different evidentiary levels.** The interventions demonstrate sensitivity of a pretrained model to modifications of selected hidden-state directions, not causal regulation in cells.
+- Features, gene lists, and several validation conditions were selected using earlier analyses. Follow-up p-values, ranks and intervention comparisons are not independent confirmatory evidence.
+- Gene positions within a perturbation condition are dependent; context-stratified bootstrap intervals rely on the observed contexts, selected conditions and stated resampling assumptions.
+- Direction controls do not always match geometry, sparsity, coefficient magnitude, or the full distribution of interventions. SAE features are neither guaranteed independent causal variables nor necessarily unique across retrainings.
+- Annotation terms overlap, hypothesis families are large, and the historical term/test-count discrepancy is unresolved.
+- SAE dictionaries were not independently refitted across random seeds for a stability analysis. Neither independent clean-environment replication nor wet-lab biological validation has been completed.
+
+Negative findings — including inconsistent donor transfer during activation patching — are retained as results rather than omitted.
+
+## Installation and local artifacts
+
+Clone the repository with its pinned upstream source trees:
 
 ```bash
 git clone --recurse-submodules https://github.com/vs-dx/pie-sae.git
 cd pie-sae
 ```
 
-If submodules were not initialized:
+If submodules are missing:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-The original experiments ran using **Python 3.12 on Windows**. Source-only checkout does not install Python dependencies or download the pretrained checkpoint and biological reference files. The complete set of installed dependency versions for this run has not been verified in the published repository; upstream installation requirements and notebook imports provide the current installation references.
+The original experiments ran with **Python 3.12 on Windows**. A clone of this source repository is **not an independently runnable reproduction package**: it does not bundle all Python dependency versions, pretrained weights, biological reference data, or the extracted activations. Follow the pinned upstream projects' environment instructions and the individual notebook imports, and provision the research artifacts before running the sequence.
 
-The full local workflow expects the following artifacts:
-
-| Local path | Source |
+| Local artifact | Role |
 |---|---|
-| `models/replogle_wdataset/k562/best_auprc.ckpt` | Pretrained PIE checkpoint, obtained separately |
-| `data/activations/expanded_128_32/` | HDF5 activations generated in notebook 02 |
-| `runs/sae_protocol_tests/` | SAE checkpoints generated in notebook 03 |
-| `results/` | Analytic summaries, annotations, manifests and reference files generated during notebooks 02–05 |
+| `models/replogle_wdataset/k562/best_auprc.ckpt` | Original pretrained PIE checkpoint (acquired separately) |
+| `data/activations/expanded_128_32/` | Train/validation HDF5 activations produced by notebook 02 |
+| `runs/sae_protocol_tests/` | Fourteen trained SAE checkpoints and associated run outputs |
+| `results/` | Local manifests, centering means, catalogs, annotation references, analysis outputs and figures |
+| `external/pie/`, `external/bio-sae/` | Pinned upstream repositories |
 
-Some references in notebook 04 are downloaded from external ontology/network sources. Checkpoints, large HDF5 files, and full reference databases are not included in this GitHub repository. The original run used Windows paths in portions of the checkpoint manifests; other operating systems may require path adaptation.
+Large model weights, HDF5 activation arrays (approximately 14.5 GiB for the saved expanded dataset), reference databases, and intermediate analysis artifacts are intentionally excluded from Git. Portions of the local manifests contain Windows-specific paths and require adaptation in other environments. Reproducing notebook 07 also requires the previously saved validation inputs and SAE checkpoints.
 
-## Methods and interpretation
+The original SAE implementation normalizes **rows** of its decoder weight matrix (`dim=1`) rather than independently normalizing the feature columns; the saved models retain this behavior. The weight layout and transposition used to obtain individual decoder directions are explicitly checked in notebook 07.
 
-SAE fitting uses the pinned upstream TopK implementation. In the decoder matrix of shape `(768, 3072)`, the upstream training code normalizes **rows** (`dim=1`), not individual feature columns. The saved models retain that behavior.
+## Code and provenance
 
-For cross-layer comparisons, this project uses **signed cosine similarity** and **mutual nearest neighbors**, followed by held-out co-activation and decoder gene/annotation comparisons. The upstream `bio-sae` cross-layer study uses an absolute-cosine threshold and feature chains. These methods address related but distinct matching questions.
+- [`src/`](src/) — reusable extraction, SAE training, feature statistics, catalog, reference-data and annotation helpers.
+- [`reports/tables/`](reports/tables/) — published CSV summaries for SAE training, annotation coverage and cross-layer correspondence.
+- [`reports/Preliminary_Findings.md`](reports/Preliminary_Findings.md) — historical preliminary report (01–05 only).
+- [PIE upstream](https://github.com/ArcInstitute/pie), pinned submodule revision `21a526add9ff3a81b4f962d9b16bbae570052c63`.
+- [bio-sae upstream](https://github.com/Biodyn-AI/bio-sae), pinned submodule revision `3ac41b1e7725c224dc1225a3311e8802eb96da85`.
 
-Functional enrichment and feature co-activation provide evidence of associations under the specified statistical controls. They do not by themselves establish perturbation-specific regulation or causal influence on PIE outputs. Correlation within experimental conditions, stable gene identity, feature prevalence, overlapping ontologies, and the finite permutation budget limit the scope of inference. SAE feature stability across repeated fits of the same block was not assessed.
+The original local project checks reported matching SHA-256 digests for the pretrained PIE checkpoint and all fourteen trained SAE checkpoints. Those binary artifacts are not hosted in this repository and were not independently re-executed for this documentation update.
 
-## Source provenance
-
-- [PIE — Arc Institute](https://github.com/ArcInstitute/pie), pinned revision `21a526add9ff3a81b4f962d9b16bbae570052c63`.
-- [bio-sae — Biodyn-AI](https://github.com/Biodyn-AI/bio-sae), pinned revision `3ac41b1e7725c224dc1225a3311e8802eb96da85`.
-
-During the original project audit, the pretrained PIE checkpoint and 14 saved SAE checkpoints matched the SHA-256 digests recorded in the local manifests, and both submodules matched the expected clean revisions. The large binary artifacts are retained outside Git.
+**Next research steps:** independently reconstruct the environment and audit statistical assumptions; resolve annotation provenance; run selection-aware and geometry-matched controls; repeat SAE fits and validation in independent conditions; pursue biological experiments only where supported by a well-defined hypothesis.
