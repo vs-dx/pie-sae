@@ -70,19 +70,19 @@ Across the three decoder transitions, matched features share on average **4.437 
 
 For decoder.0 feature 0, the observed common-condition variation fraction was **55.476%** on a ten-gene panel; a within-context measure based on a different variance denominator was **68.854%**. Random linear projections of the underlying PIE representations also showed substantial shared variation, so these observations do not establish SAE-specific structure.
 
-The original 06a run examined **4,420** case-sensitive GO Biological Process, KEGG, and Reactome terms. The case-corrected family contains **4,421** terms. In both versions, ten selected decoder.0 features were evaluated. Under global gene-label and annotation-degree-stratified permutation controls with 1,000 permutations each, **seven of the ten** passed both fixed-panel maxT procedures. The panel and its controls are exploratory, not a full-dictionary selection-adjusted test.
+The corrected local run examined **4,421** GO Biological Process, KEGG and Reactome terms. The original case-sensitive run examined 4,420. In each run, **seven of ten** selected decoder.0 features passed both fixed-panel maxT controls at p < 0.05, using 1,000 global gene-label permutations and 1,000 annotation-degree-stratified permutations. The inference applies to this exploratory panel.
 
 ### Expanded statistical validation (06b)
 
 The follow-up analysis compared all **12,288 decoder SAE features** across training and validation catalogs; **12,285** had complete Top-20 gene-association catalogs in both splits. Individual features differed markedly in stability and firing support, notably feature 2120.
 
-The **original saved 06b run** evaluated **54,312,960 feature–term hypotheses** and reported **73,646 associations across 6,491 features** at q ≤ 0.05. An **independent 21 November 2026 audit** identified case-sensitive gene matching and recomputed the ontology-only global-BH family as **4,421 terms / 54,325,248 hypotheses / 73,657 associations across 6,492 features**. Corrected notebook code is available on the `audit/case-normalization-2026-11-21` branch, with new outputs **pending a local rerun**. These are results under the stated model; gene selection, dependent ontology terms, and assumptions required for formal FDR interpretation remain substantive limitations.
+Across **54,325,248 hypotheses** (12,288 features × 4,421 ontology terms), the corrected local 06b run found **73,657 feature–term associations across 6,492 features** at global Benjamini–Hochberg q ≤ 0.05. These counts agree with the independent recalculation of 21 November 2026. The original case-sensitive run tested 54,312,960 hypotheses and found 73,646 associations across 6,491 features. Some Markdown cells in the execution commit still describe the earlier run. The [correction record](reports/Case_Normalization_Correction.md#reading-the-executed-notebooks) identifies the affected sections. See the [saved 06a and 06b runs](https://github.com/vs-dx/pie-sae/commit/eea71712a62cf2e5b9061fcf132e5b730cc6e52c).
 
-A subsequently examined **98-feature exploratory panel** yielded **19 features** passing both fixed-panel global and degree-aware maxT controls. The panel was partly selected using earlier results: these counts do **not** establish selection-adjusted significance over the complete 12,288-feature decoder population.
+In a **98-feature exploratory panel**, 22 features passed global fixed-panel maxT, 19 passed degree-stratified maxT, and **19 passed both**. All 19 came from the group already significant under BH. The panel was partly selected on earlier enrichment results, which limits inference to the selected features.
 
 The expanded analysis also revisited feature-matching, co-activation, and gene-overlap results under distinct permutation controls. The controls test different null hypotheses and do not demonstrate causal coupling between features.
 
-**Resolved historical annotation provenance (independent audit):** The original 04 analysis was reproduced as **4,421 case-normalized ontology terms plus one curated TRRUST TF term = 4,422 terms**, with **73,764 significant feature–term associations across 6,525 features**, using per-layer BH. The previous unexplained explicit-test residual was **340**, not 337, and falls to **zero** after correcting gene case and accounting for TRRUST. The corrected 06b global-BH results are a **different hypothesis family and correction protocol** from historical 04; see [the correction record](reports/Case_Normalization_Correction.md) and [06b](notebooks/06b_full_statistical_validation.ipynb).
+**Historical annotations (04).** The independent audit reproduced 4,422 terms, 73,764 significant associations and 6,525 annotated features using per-layer BH. Compared with original 06b, normalizing gene identifiers restored 340 feature–term pairs with at least two shared genes. Adding the curated TRRUST transcription-factor set accounts for a further 3,439 pairs. The corrected 06b output reconciles the explicit-test counts in every decoder layer. The 06b global BH analysis uses only the 4,421 GO BP, KEGG and Reactome terms. See the [correction record](reports/Case_Normalization_Correction.md).
 
 ## Results: computational interventions (07)
 
@@ -106,7 +106,7 @@ The notebook reports **15/15 internal intervention consistency checks**; noteboo
 - Features, gene lists, and several validation conditions were selected using earlier analyses. Follow-up p-values, ranks and intervention comparisons are not independent confirmatory evidence.
 - Gene positions within a perturbation condition are dependent; context-stratified bootstrap intervals rely on the observed contexts, selected conditions and stated resampling assumptions.
 - Direction controls do not always match geometry, sparsity, coefficient magnitude, or the full distribution of interventions. SAE features are neither guaranteed independent causal variables nor necessarily unique across retrainings.
-- Annotation terms overlap and hypothesis families are large. The historical term/test-count discrepancy has been **explained by case normalization**, but the revised 06b outputs still need to be regenerated locally and independently checked after rerun.
+- Ontology terms share genes, and each feature's Top-20 list was selected from training data. The interpretation of global BH and the permutation tests depends on their respective null and dependence assumptions.
 - SAE dictionaries were not independently refitted across random seeds for a stability analysis. Neither independent clean-environment replication nor wet-lab biological validation has been completed.
 
 Negative findings — including inconsistent donor transfer during activation patching — are retained as results rather than omitted.
@@ -148,6 +148,6 @@ The original SAE implementation normalizes **rows** of its decoder weight matrix
 - [PIE upstream](https://github.com/ArcInstitute/pie), pinned submodule revision `21a526add9ff3a81b4f962d9b16bbae570052c63`.
 - [bio-sae upstream](https://github.com/Biodyn-AI/bio-sae), pinned submodule revision `3ac41b1e7725c224dc1225a3311e8802eb96da85`.
 
-The original local project checks reported matching SHA-256 digests for the pretrained PIE checkpoint and all fourteen trained SAE checkpoints. Those binary artifacts are not hosted in this repository and were not independently re-executed for this documentation update.
+The original local project checks reported matching SHA-256 digests for the pretrained PIE checkpoint and all fourteen trained SAE checkpoints. The local 06a and 06b reruns used existing project artifacts. Independent reconstruction of the complete pipeline still requires access to the model weights and activation data.
 
-**Next research steps:** rerun the case-corrected notebooks and verify their outputs; independently reconstruct the environment and audit statistical assumptions; run selection-aware and geometry-matched controls; repeat SAE fits and validation in independent conditions; pursue biological experiments only where supported by a well-defined hypothesis.
+**Next research steps.** Independently reconstruct the environment and examine the statistical assumptions. Evaluate prespecified feature panels, geometry-matched controls, repeat SAE fits, and independent perturbation conditions before pursuing biological validation.

@@ -2,7 +2,7 @@
 
 **Research report — exploratory study**  
 **Repository:** [vs-dx/pie-sae](https://github.com/vs-dx/pie-sae)  
-**Report date:** 17 November 2026  
+**Report date:** 17 November 2026 (statistical results updated 21 November 2026)\
 **Scope:** Notebooks 01–07 (including 06a and 06b)  
 **Status:** Completed exploratory computational analyses; independent third-party replication, biological validation, and unique feature-level mediation remain outstanding.
 
@@ -10,7 +10,7 @@
 
 Sparse autoencoders (SAEs) provide a way to approximate high-dimensional neural representations using a comparatively small set of active dictionary features. Whether these learned features identify biologically meaningful computations, rather than stable gene identities or geometric regularities, requires additional statistical and intervention-based analysis. We applied layer-wise TopK SAEs to the pretrained Perturbation Is Everything (PIE) model, fitting one 3,072-feature dictionary to each of its 14 encoder, processor, and decoder blocks. The models reconstructed selected held-out representations with R² values between 0.8119 and 0.9821. Decoder SAE features exhibited extensive associations with functional gene sets and measurable correspondence across adjacent blocks.
 
-We subsequently examined gene-identity confounds, condition-level uncertainty, functional-enrichment null models, and cross-layer matching controls. The original saved 06b analysis of 12,288 decoder features against 4,420 case-sensitive ontology terms reported 73,646 Benjamini–Hochberg-significant feature–term associations across 6,491 features. An independent subsequent audit resolved the gene-identifier mismatch and recomputed 4,421 ontology terms, 73,657 associations, and 6,492 annotated features under the same global BH protocol. The corrected notebook has not yet been rerun locally. In a separately selected 98-feature panel, 19 features passed both fixed-panel maxT controls. These results are exploratory because of dependency, null-model, and post-selection limitations.
+We examined gene-identity confounds, condition-level uncertainty, functional-enrichment null models, and cross-layer matching controls. In the corrected 06b run, 12,288 decoder features were tested against 4,421 ontology terms. Global Benjamini–Hochberg correction at q ≤ 0.05 yielded 73,657 significant feature–term associations across 6,492 features. This agrees with the independent recalculation after gene identifiers were normalized. The original 4,420-term analysis reported 73,646 associations across 6,491 features. In an exploratory 98-feature panel, 19 features passed both fixed-panel maxT controls. Interpretation depends on the null models, overlapping gene sets and prior feature selection.
 
 Targeted decoder.0 SAE-direction interventions changed PIE predictions. Feature 189 ablation affected all 32 selected validation conditions, but its advantage over matched controls was inconsistent. Feature-coefficient patching did not reliably move recipient predictions toward donor predictions. Ablating feature 189 consistently produced a large response in the geometrically matched downstream decoder.1 feature 413 in six selected conditions; nevertheless, the controls were not matched for the pair's geometric alignment, so unique causal mediation was not established. The study identifies reproducible computational phenomena and important negative controls, but it does not demonstrate biological causality or an independently validated mechanistic explanation.
 
@@ -60,9 +60,9 @@ SAE directions in adjacent blocks within the same architectural component were m
 
 ### 3.4 Statistical robustness and null models
 
-The 06a pilot studied shared condition variation, leave-one-out robustness, cell-context effects, and random projection controls. It originally evaluated ten selected decoder.0 features against 4,420 case-sensitive ontology terms (4,421 after case normalization) using 1,000 global gene-label and 1,000 annotation-degree-stratified permutations. A single-step maxT approach controlled the selected panel under each specified permutation scheme.
+The 06a pilot studied shared condition variation, leave-one-out robustness, cell-context effects, and random projection controls. It evaluated ten selected decoder.0 features against 4,421 case-normalized ontology terms using 1,000 global gene-label and 1,000 annotation-degree-stratified permutations. A single-step maxT adjustment used the maximum enrichment statistic over the ten fixed features under each permutation scheme.
 
-The 06b study reconstructed the annotation hypothesis family, examined training-versus-validation gene ranks, used context-stratified bootstrap procedures, tested the complete set of 12,288 decoder features against the original 4,420-term family, subsequently corrected to 4,421, and evaluated a separate 98-feature panel under fixed-panel maxT controls. It also revisited cross-layer null comparisons. Neither the 10-feature nor the 98-feature panel can be interpreted as an independent confirmatory sample after earlier feature selection. [Sources: notebooks 06a](../notebooks/06a_statistical_significance.ipynb) [and 06b](../notebooks/06b_full_statistical_validation.ipynb).
+The 06b study reconstructed the annotation hypothesis family, examined training-versus-validation gene ranks, used context-stratified bootstrap procedures, tested the complete set of 12,288 decoder features against the corrected 4,421-term ontology family, and evaluated a separate 98-feature panel under fixed-panel maxT controls. It also revisited cross-layer null comparisons. Neither the 10-feature nor the 98-feature panel can be interpreted as an independent confirmatory sample after earlier feature selection. [Sources: notebooks 06a](../notebooks/06a_statistical_significance.ipynb) [and 06b](../notebooks/06b_full_statistical_validation.ipynb).
 
 ### 3.5 Computational interventions
 
@@ -115,9 +115,9 @@ Under the two fixed-panel, 1,000-permutation maxT nulls, **seven of ten** explor
 
 Cross-split catalogs covered **12,288 decoder features**, with **12,285** complete feature-level Top-20 catalogs in both train and validation splits. Feature-level stability was heterogeneous; features 0 and 189 showed comparatively high gene-ranking support, whereas feature 2120 was more sensitive to the association statistic and had sparse firing support among top-ranked genes.
 
-The **original saved 06b run** used **12,288 × 4,420 = 54,312,960** feature–ontology hypotheses and reported **73,646** significant associations involving **6,491** features under a global BH procedure. An **independent audit dated 21 November 2026** found a gene-identifier case mismatch and recomputed **12,288 × 4,421 = 54,325,248** hypotheses, **609,373 explicit overlap-based tests**, **73,657 significant associations**, and **6,492 annotated features**. These audit-derived corrected values are **pending local rerun of the revised notebook**. The family-wide result is not a claim that all such features mediate biological processes: correlated ontology terms, selected gene rankings, and uncertain p-value dependence affect interpretation.
+The corrected 06b run tested **12,288 × 4,421 = 54,325,248** feature–ontology hypotheses. Of these, **609,373** pairs had at least two overlapping genes and received an explicit enrichment test. The full-family global BH adjustment at q ≤ 0.05 yielded **73,657 associations across 6,492 features**, matching the independent audit. The original case-sensitive run tested 54,312,960 hypotheses and reported 73,646 associations across 6,491 features. Correlated ontology terms and training-based gene selection limit the interpretation of these associations. See the [saved 06a and 06b runs](https://github.com/vs-dx/pie-sae/commit/eea71712a62cf2e5b9061fcf132e5b730cc6e52c).
 
-In the subsequent **98-feature exploratory panel**, **19** features passed both global and annotation-degree-aware fixed-panel maxT procedures at p < 0.05. The panel had been partly informed by the same enrichment findings; no selection-aware degree-controlled family-wise conclusion over the entire 12,288-feature population follows.
+In the **98-feature exploratory panel**, 22 features passed global fixed-panel maxT, 19 passed degree-stratified maxT, and **19 passed both** at p < 0.05. For decoder.0 feature 2120, the respective adjusted p-values were 0.03497 and 0.04296 in the ten-feature pilot, and 0.35165 and 0.55445 in the larger panel. The larger panel was partly selected on BH significance, so inference remains conditional on that selection.
 
 The statistical reanalysis also found that observed dictionary alignment can exceed selected orientation nulls without implying one-to-one feature identity. Mutual-nearest-neighbor fractions were lower than their geometric null means in ten of the eleven adjacent transitions. [Source: notebook 06b](../notebooks/06b_full_statistical_validation.ipynb).
 
@@ -157,7 +157,7 @@ The current study contains evidence at the first two levels under substantial qu
 
 ### 5.2 Historical annotation provenance
 
-An independent audit (21 November 2026) traced the former discrepancy to inconsistent uppercase normalization of PIE gene symbols. The original 04 hypothesis family was reproduced with **4,421 GO BP / KEGG / Reactome terms plus one curated TRRUST TF term = 4,422 terms**, **73,764 significant feature–term associations**, and **6,525 annotated decoder features**, under *per-layer* BH correction. The previously described residual was **340 explicit tests**, not 337; its corrected residual is **zero**. This resolves historical annotation provenance, but does not remove the enrichment model's inferential limitations or substitute for a fresh run of the corrected 06b notebook. Details and the audit distinction are in [Case_Normalization_Correction.md](Case_Normalization_Correction.md).
+The independent audit of 21 November 2026 traced the discrepancy to case-sensitive matching of PIE gene symbols in the original 06a/06b reconstruction. It reproduced **4,421 GO BP, KEGG and Reactome terms plus one curated TRRUST TF term** in 04, with **73,764 significant associations across 6,525 features** under per-layer BH. The original 06b ontology-only calculation counted 609,033 pairs with overlap ≥ 2. Normalizing identifiers restored 340 pairs (previously misreported as 337). The additional TRRUST term accounts for 3,439 pairs. Together these reproduce all **612,812** historical explicit tests, with zero residual in every decoder layer. See the [correction record](Case_Normalization_Correction.md).
 
 ### 5.3 Selection, dependence, and null-model assumptions
 
@@ -173,11 +173,11 @@ The 189–413 results therefore motivate **geometry-matched controls and downstr
 
 ### 5.5 Reproducibility boundaries
 
-The original main-branch repository at commit `0812a7c` includes source code, all eight notebooks with saved results, three compact summary tables, pinned upstream submodule revisions, and documentation. The corrected 06a/06b versions in the audit branch have the dependent outputs cleared pending rerun. It excludes the approximately 14.5-GiB extracted activation data, pretrained PIE checkpoint, trained SAE weights, and some local analysis artifacts. A complete independent clean-environment rerun has not been performed. The saved 06b and 07 final cells report **19/19** and **15/15** internal consistency checks, respectively; these checks do not substitute for independent reproduction or peer review.
+The historical repository at [`0812a7c`](https://github.com/vs-dx/pie-sae/commit/0812a7c0a7efb6926784138b5cf39580b3008dee) includes source code, eight notebooks with saved results, three compact summary tables and pinned upstream submodule revisions. The local 21 November runs used existing project data and checkpoints. The execution commit contains all 33 sequential code cells in 06a and all 41 in 06b. All 19 checks in the corrected 06b run passed. The original 07 output records 15/15 internal checks. The public repository omits the approximately 14.5 GiB of extracted activations, pretrained PIE checkpoint, trained SAE weights and some local analysis artifacts. Reproducing the complete pipeline, including 07, in an independent environment remains open. See the [saved 06a and 06b runs](https://github.com/vs-dx/pie-sae/commit/eea71712a62cf2e5b9061fcf132e5b730cc6e52c).
 
 ## 6. Conclusions
 
-Fourteen TopK SAE dictionaries approximately reconstructed the sampled internal PIE representations at the chosen sparsity level. The decoder dictionaries exhibited extensive gene-associated enrichment and adjacent-block correspondence under the recorded statistical and permutation procedures. Expanded statistical auditing revealed both robust descriptive associations and limits due to feature selection, gene identity, dependence, and the need to rerun the corrected statistical notebooks.
+Fourteen TopK SAE dictionaries approximately reconstructed the sampled internal PIE representations at the chosen sparsity level. The decoder dictionaries exhibited extensive gene-associated enrichment and adjacent-block correspondence under the recorded statistical and permutation procedures. Expanded statistical auditing revealed both robust descriptive associations and limits due to feature selection, gene identity, and dependence among tests.
 
 Computational interventions demonstrated that selected SAE decoder directions affect PIE predictions and downstream representations. Nevertheless, feature-189 ablation was not uniformly superior to controls, and feature-coefficient patching failed to achieve consistent donor-prediction transfer. A strong downstream response was observed for the geometrically matched feature pair **189–413**, but the available controls do not distinguish special mediation from geometric alignment or TopK effects.
 
@@ -185,16 +185,15 @@ The principal contribution of this work is a connected, provenance-aware explora
 
 ## 7. Recommended next experiments
 
-1. **Rerun and verify the correction.** Re-execute the corrected 06a/06b notebooks using the original references and catalogs, compare the outputs with the independent audit, and preserve the historical results at commit `0812a7c`.
-2. **Improve selection-aware inference.** Define held-out feature panels, fresh perturbation conditions, and appropriate family-level controls before testing prioritized findings.
-3. **Test SAE specificity.** Compare with reconstruction-matched linear and nonlinear baselines, repeated same-layer SAE fits, and controls matched for activation prevalence, magnitude, and geometric alignment.
-4. **Test mediation directly.** Compare upstream ablation, downstream feature-413 interventions, and joint or rescue interventions while accounting for off-manifold representations.
-5. **Reproduce externally.** Export a dependency-locked environment and artifact manifest, then rerun the analysis in a clean computational environment.
-6. **Seek biological validation cautiously.** Only advance selected candidate hypotheses to experimental validation after computational specificity and statistical robustness have been demonstrated.
+1. **Improve selection-aware inference.** Define held-out feature panels, fresh perturbation conditions, and appropriate family-level controls before testing prioritized findings.
+2. **Test SAE specificity.** Compare with reconstruction-matched linear and nonlinear baselines, repeated same-layer SAE fits, and controls matched for activation prevalence, magnitude, and geometric alignment.
+3. **Test mediation directly.** Compare upstream ablation, downstream feature-413 interventions, and joint or rescue interventions while accounting for off-manifold representations.
+4. **Reproduce externally.** Export a dependency-locked environment and artifact manifest, then rerun the analysis in a clean computational environment.
+5. **Seek biological validation cautiously.** Only advance selected candidate hypotheses to experimental validation after computational specificity and statistical robustness have been demonstrated.
 
 ## 8. Reproducibility and source index
 
-All observations in this report are drawn from the published repository and its saved notebook outputs. The report is a synthesis of the available experimental record, **not an independent rerun**. Methods and output details should be checked against the corresponding notebooks.
+The historical notebooks and CSVs supply the original study results. The independent audit reconstructed the functional annotations from saved Top-20 catalogs and reference gene sets. The corrected local executions supply the 06a/06b statistics reported here. The recorded interventions in 07 come from the original execution.
 
 | Source | Evidentiary role |
 |---|---|
