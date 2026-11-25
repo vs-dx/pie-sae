@@ -8,6 +8,25 @@ Fourteen TopK SAEs are fitted to PIE's encoder, processor, and decoder blocks. T
 
 The project uses pinned upstream implementations of [PIE (Arc Institute)](https://github.com/ArcInstitute/pie) and [bio-sae (Biodyn-AI)](https://github.com/Biodyn-AI/bio-sae), included as Git submodules. PIE-specific extraction, analysis, statistical checks, and interventions are implemented in this repository.
 
+[Open the interactive Atlas](https://vs-dx.github.io/pie-sae/atlas/) · [Research overview](https://vs-dx.github.io/pie-sae/) · [Full research report](reports/Research_Report.md) · [Pipeline and release audit](reports/Pipeline_Coverage_and_Release_Audit.md)
+
+**Start with decoder.0 feature 189.** In the Atlas, choose **Explore feature 189**. ASH1L leads its training and validation gene lists. The annotation table shows the original notebook-04 per-layer q-values. The **Intervention synthesis** link follows the same feature into notebook 07, where subtracting its decoded contribution changes PIE outputs in 32 selected conditions. Feature 413 in decoder.1 shows the strongest response in six selected conditions. Alignment with the selected direction limits the specificity of that result.
+
+## Relationship to the Geneformer and scGPT study
+
+This project adapts Ihor Kendiukhov’s layer-wise interpretability workflow to PIE. PIE uses 512 latent slots per condition in the encoder and processor and a gene-indexed decoder. Biological feature catalogs therefore cover the four decoder blocks. The published study also measures regulatory specificity in external CRISPRi data and evaluates a multi-tissue training control. Those questions remain open for PIE. The audit maps each method in §§5.1–5.13 to code and results, including the different ablation and co-activation protocols. [Reference paper, v1](https://arxiv.org/abs/2603.02952v1) · [Method-by-method comparison](reports/Pipeline_Coverage_and_Release_Audit.md#method-by-method-comparison)
+
+## What the Atlas contains
+
+| Entry point | Data and interpretation |
+|---|---|
+| Overview and layer explorer | Reconstruction and validation firing statistics for 14 dictionaries of 3,072 features each. |
+| Feature, gene and pathway explorers | Training and validation Top-20 lists for decoder features, a training gene index, and 73,764 historical notebook-04 annotations across 6,525 features. |
+| Corrected 06b summary | Global BH gives 73,657 associations across 6,492 features. Individual q-values in cards retain their notebook-04 provenance. |
+| Cross-layer flow and interventions | 12,411 mutual cosine matches over 11 adjacent transitions and a summary of the saved model interventions, with links to notebook 07. |
+
+The static research overview is in `docs/index.html`. The interactive application and compact JSON are in `docs/atlas/`. For local browsing from the repository root, run `python -m http.server 8000 --bind 127.0.0.1 --directory docs` and open `http://127.0.0.1:8000/atlas/`. A browser can explore the saved data without model weights or a running PIE process.
+
 ## Research questions
 
 1. How faithfully do layer-wise SAEs reconstruct PIE's internal representations?

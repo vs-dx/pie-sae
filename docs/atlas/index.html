@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b111b">
+<meta name="description" content="PIE-SAE Atlas — an interactive research atlas of sparse autoencoder features in the Perturbation Is Everything model, with biological annotations and computational evidence.">
+<title>PIE-SAE Atlas · Interactive Research Explorer</title>
+<link rel="stylesheet" href="./style.css">
+<script defer src="./app.js"></script>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar">
+      <a class="identity" href="#overview"><span class="identity-mark">P<span>:</span>S</span><span class="identity-copy"><b>PIE–SAE</b><small>RESEARCH ATLAS</small></span></a>
+      <div class="side-group-label">DISCOVER</div>
+      <nav id="sidebar-nav" aria-label="Primary navigation">
+        <a href="#overview" data-nav="overview"><span class="nav-symbol">◫</span> Overview</a>
+        <a href="#layers" data-nav="layers"><span class="nav-symbol">▤</span> Layer explorer</a>
+        <a href="#features" data-nav="features"><span class="nav-symbol">◈</span> Feature explorer</a>
+        <a href="#genes" data-nav="genes"><span class="nav-symbol">⌕</span> Gene search</a>
+        <a href="#pathways" data-nav="pathways"><span class="nav-symbol">≋</span> Pathway search</a>
+      </nav>
+      <div class="side-group-label">ANALYZE</div>
+      <nav id="sidebar-nav-more" aria-label="Research analyses">
+        <a href="#cross-layer" data-nav="cross-layer"><span class="nav-symbol">⑂</span> Cross-layer flow</a>
+        <a href="#interventions" data-nav="interventions"><span class="nav-symbol">⚗</span> Interventions</a>
+        <a href="#comparisons" data-nav="comparisons"><span class="nav-symbol">▥</span> Comparisons</a>
+        <a href="#methods" data-nav="methods"><span class="nav-symbol">ⓘ</span> Methods & sources</a>
+      </nav>
+      <div class="side-foot">
+        <div class="side-status"><span class="signal"></span> EXPLORATORY DATASET</div>
+        <small>Saved experimental outputs · no independent biological validation</small>
+        <a href="https://github.com/vs-dx/pie-sae" target="_blank" rel="noopener noreferrer">View GitHub repository ↗</a>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumbs"><span>PIE-SAE</span><span class="chev">/</span><strong id="breadcrumb-current">Atlas</strong></div>
+        <div class="top-actions"><span class="top-version">ATLAS · 06b</span><a href="https://github.com/vs-dx/pie-sae/blob/c70dccff03d617187812db72ddf48a9e5062876f/reports/Research_Report.md" target="_blank" rel="noopener noreferrer" class="top-report">Research report ↗</a></div>
+      </header>
+      <main id="main-content" tabindex="-1"><div class="loader">Opening the atlas <span class="dots">•••</span></div></main>
+      <footer class="footer">PIE-SAE Atlas · Fixed pretrained PIE and SAE checkpoints · Feature-card annotations use notebook 04 per-layer q-values. <a href="#methods">Scientific limitations</a></footer>
+    </div>
+  </div>
+</body>
+</html>
