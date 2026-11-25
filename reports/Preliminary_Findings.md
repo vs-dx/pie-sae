@@ -1,3 +1,5 @@
+> **Historical preliminary report (notebooks 01–05 only).** This document records the state of the exploratory work before the statistical validation and computational interventions in 06a, 06b and 07. The 21 November 2026 independent audit reproduced the historical 04 functional annotations after consistent case normalization of gene identifiers; see [Case Normalization Correction](Case_Normalization_Correction.md). References below to missing causal interventions describe the scope of notebooks 01–05, not the present project.
+
 # Preliminary Findings: Layer-wise Sparse Autoencoder Analysis of PIE
 
 ## Experimental scope
