@@ -48,7 +48,7 @@
       <div class="hero">
         <div>
           <div class="eyebrow">Exploratory research · November 2026</div>
-          <h1>Interpreting a model requires more than <span>finding features.</span></h1>
+          <h1>Sparse autoencoder analysis of <span>PIE</span></h1>
           <p class="lead">A layer-wise sparse autoencoder study of the pretrained <strong>Perturbation Is Everything (PIE)</strong> model, combining reconstruction, biological annotations, statistical controls and computational interventions.</p>
           <div class="buttonline">
             <a class="action main" href="./atlas/">Open the interactive Atlas →</a>
@@ -91,8 +91,8 @@
         <article class="pipe"><span class="index">03</span><h3>SAE training</h3><p>Fit fourteen independent layer-wise TopK dictionaries using pinned upstream code.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/03_train_layerwise_sae.ipynb">Notebook 03 ↗</a></article>
         <article class="pipe"><span class="index">04</span><h3>Feature analysis</h3><p>Study feature usage, dictionary geometry, gene associations and enrichment.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/04_sae_feature_analysis.ipynb">Notebook 04 ↗</a></article>
         <article class="pipe"><span class="index">05</span><h3>Cross-layer matching</h3><p>Compare adjacent-block dictionary directions, firing and gene associations.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/05_cross_layer_analysis.ipynb">Notebook 05 ↗</a></article>
-        <article class="pipe"><span class="index">06a</span><h3>Statistical pilot</h3><p>Evaluate selected features with random projections and permutation nulls.</p><a href="https://github.com/vs-dx/pie-sae/blob/eea71712a62cf2e5b9061fcf132e5b730cc6e52c/notebooks/06a_statistical_significance.ipynb">Notebook 06a ↗</a></article>
-        <article class="pipe"><span class="index">06b</span><h3>Expanded validation</h3><p>Audit provenance, bootstrap uncertainty, enrichment and correspondence.</p><a href="https://github.com/vs-dx/pie-sae/blob/eea71712a62cf2e5b9061fcf132e5b730cc6e52c/notebooks/06b_full_statistical_validation.ipynb">Notebook 06b ↗</a></article>
+        <article class="pipe"><span class="index">06a</span><h3>Statistical pilot</h3><p>Evaluate selected features with random projections and permutation nulls.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/06a_statistical_significance.ipynb">Notebook 06a ↗</a></article>
+        <article class="pipe"><span class="index">06b</span><h3>Expanded validation</h3><p>Audit provenance, bootstrap uncertainty, enrichment and correspondence.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/06b_full_statistical_validation.ipynb">Notebook 06b ↗</a></article>
         <article class="pipe"><span class="index">07</span><h3>Interventions</h3><p>Test ablation, donor patching and downstream feature responses in PIE.</p><a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/07_causal_validation.ipynb">Notebook 07 ↗</a></article>
       </div>
     </div></section>
@@ -136,7 +136,7 @@
         <div class="stat-card"><div class="value">73,657</div><span class="lbl">Corrected BH associations</span><p class="desc">Across 6,492 decoder features at global BH q ≤ 0.05 in the corrected 06b run.</p></div>
         <div class="stat-card"><div class="value">19 / 98</div><span class="lbl">Exploratory panel features</span><p class="desc">Passing both fixed-panel maxT controls; the panel was partly selected from earlier results.</p></div>
       </div>
-      <p class="note">The 21 November 2026 local rerun reproduced the independent audit totals. The original 06b run found 73,646 associations across 6,491 features. Normalizing gene symbols restored 340 feature–term pairs with overlap ≥ 2. Including the additional curated TRRUST term accounts for 3,439 more pairs, reconciling all 612,812 explicit tests in historical notebook 04. <a href="https://github.com/vs-dx/pie-sae/blob/eea71712a62cf2e5b9061fcf132e5b730cc6e52c/notebooks/06b_full_statistical_validation.ipynb">View the executed 06b notebook ↗</a></p>
+      <p class="note">The 21 November 2026 local rerun reproduced the independent audit totals. The original 06b run found 73,646 associations across 6,491 features. Normalizing gene symbols restored 340 feature–term pairs with overlap ≥ 2. Including the additional curated TRRUST term accounts for 3,439 more pairs, reconciling all 612,812 explicit tests in historical notebook 04. <a href="https://github.com/vs-dx/pie-sae/blob/main/notebooks/06b_full_statistical_validation.ipynb">View the corrected 06b notebook ↗</a></p>
     </div></section>
 
     <section class="section" id="interventions"><div class="wrap">
@@ -185,8 +185,8 @@
         <a href="https://github.com/vs-dx/pie-sae/blob/main/README.md"><b>Project README ↗</b><small>Pipeline, environment and source provenance</small></a>
         <a href="https://github.com/vs-dx/pie-sae/tree/main/notebooks"><b>All eight notebooks ↗</b><small>Code, saved figures and experiment outputs</small></a>
         <a href="https://github.com/vs-dx/pie-sae/tree/main/reports/tables"><b>Published results tables ↗</b><small>Reconstruction, annotations and correspondence</small></a>
-        <a href="https://github.com/ArcInstitute/pie"><b>Upstream PIE ↗</b><small>Pinned revision 21a526a</small></a>
-        <a href="https://github.com/Biodyn-AI/bio-sae"><b>Upstream bio-sae ↗</b><small>Pinned revision 3ac41b1</small></a>
+        <a href="https://github.com/ArcInstitute/pie/tree/21a526add9ff3a81b4f962d9b16bbae570052c63"><b>Upstream PIE ↗</b><small>Pinned revision 21a526a</small></a>
+        <a href="https://github.com/Biodyn-AI/bio-sae/tree/3ac41b1e7725c224dc1225a3311e8802eb96da85"><b>Upstream bio-sae ↗</b><small>Pinned revision 3ac41b1</small></a>
       </div>
       <div class="caution">This is an exploratory computational study, not a peer-reviewed paper or evidence of experimentally verified biological causality. Model outputs and statistical significance under specific nulls should not be mistaken for validated biological mechanisms.</div>
     </div></section>
