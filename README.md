@@ -147,6 +147,8 @@ git submodule update --init --recursive
 
 The original experiments ran with **Python 3.12 on Windows**. A clone of this source repository is **not an independently runnable reproduction package**: it does not bundle all Python dependency versions, pretrained weights, biological reference data, or the extracted activations. Follow the pinned upstream projects' environment instructions and the individual notebook imports, and provision the research artifacts before running the sequence.
 
+Arc Institute provides the prepared inputs for notebooks 01–02 in the [Replogle/Nadig dataset](https://huggingface.co/datasets/arcinstitute/PIE_replogle_nadig_essential/tree/20c9faef76fc96fdc809871340bd93499413dfe7/preprocessed) and the [K562 held-out-context splits](https://huggingface.co/datasets/arcinstitute/PIE_splits/tree/396ab9563175ee887750c9eed7ccaea6f5fdbf50/replogle_wdataset/unseen_ctx/k562).
+
 | Local artifact | Role |
 |---|---|
 | `models/replogle_wdataset/k562/best_auprc.ckpt` | Original pretrained PIE checkpoint (acquired separately) |

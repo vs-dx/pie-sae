@@ -26,7 +26,7 @@ The historical 04 CSVs report a per-layer BH adjustment across 4,422 terms inclu
 
 In the local runs, **7/10** features in 06a and **19/98** in 06b passed both the global and annotation-degree-stratified fixed-panel maxT controls. These counts agree with the independent recalculation. The panel was partly selected on earlier BH results. In the independent recalculation, rebuilding the 98-feature panel after normalization replaced decoder.3 feature 1419 with feature 1421. The same 19 features passed both controls. The p-values apply to the selected panel.
 
-## What is changed on this branch
+## Files updated by the correction
 
 - `notebooks/06a_statistical_significance.ipynb`: canonical uppercase gene universe and Top-20 matching, corrected ontology-family size, saved local results.
 - `notebooks/06b_full_statistical_validation.ipynb`: canonical gene universe and reference matching, corrected ontology, hypothesis and association counts, saved local results.
@@ -51,7 +51,9 @@ At execution commit [`eea7171`](https://github.com/vs-dx/pie-sae/commit/eea71712
 | 06a §12.6 and §13, cells 58 and 62 | Seven of ten features passed both maxT controls. For decoder.0 feature 2120, global and degree-stratified maxT p-values are 0.03497 and 0.04296. |
 | 06b §C.2–C.3, cells 53, 56 and 59 | All four historical layer counts reconcile. The corrected global BH run gives 73,657 associations across 6,492 features. |
 | 06b §C.4, cell 63 | In the 98-feature panel, 22 passed global maxT, 19 passed degree-stratified maxT, and 19 passed both. The respective adjusted p-values are 0.00599 and 0.03497 for feature 0, and 0.35165 and 0.55445 for feature 2120. |
-| 06b §E.3, cell 100 | All 19 numerical checks passed. The two fixed `NOT YET PERFORMED` messages describe the scope of the original 06b analysis. The subsequent independent audit verified annotations and enrichment. Notebook [07](../notebooks/07_causal_validation.ipynb) reports interventions in the fixed model. |
+| 06b §E.3, cell 100 | All 19 numerical checks passed. Two fixed status messages in the archived output describe the scope of the original 06b analysis. The subsequent independent audit verified annotations and enrichment. Notebook [07](../notebooks/07_causal_validation.ipynb) reports interventions in the fixed model. |
+
+The [archived notebooks](https://github.com/vs-dx/pie-sae/tree/df7ccd638cc6a9d189aaeede4ba5035d72801dc8/notebooks) preserve the full console logs for 06a, 06b and 07. The current copies omit routine progress and file-status messages from those saved runs.
 
 ## Remaining independent concerns
 
